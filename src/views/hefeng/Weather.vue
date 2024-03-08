@@ -8,7 +8,7 @@
       <a-button class="tool-button" @click="touchRetrieve">
         失败地区重新获取
         <a-tooltip>
-          <template #title>不清空列表，查询成功的地区会保留，会将查询失败的地区进行重新获取，如果因为请求超频导致的获取失败，可以卡时间（1分钟的超频次数限制）进行重新获取，以保证查询列表数据全部展示。</template>
+          <template #title>不清空列表，查询成功的地区会保留，会将查询失败的地区进行重新获取，以保证查询列表数据全部展示。</template>
           <InfoCircleOutlined />
         </a-tooltip>
       </a-button>
