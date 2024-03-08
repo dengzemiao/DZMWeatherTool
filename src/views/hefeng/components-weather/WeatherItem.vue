@@ -61,7 +61,7 @@
           </div>
           <div>
             <span class="col-title">紫外线：</span>
-            <span class="col-desc">{{ item.uvIndex }}</span>
+            <span class="col-desc">{{ item.uvIndex }}　{{ getUvIndex(item.uvIndex) }}</span>
           </div>
           <div>
             <span class="col-title">大气压强：</span>
@@ -165,6 +165,20 @@ export default {
         this.getData()
       }
     },
+    // 获取紫外线强度
+    getUvIndex (uvIndex) {
+      if (uvIndex <= 2) {
+        return '非常弱'
+      } else if (uvIndex <= 4) {
+        return '弱'
+      } else if (uvIndex <= 6) {
+        return '中等'
+      } else if (uvIndex <= 9) {
+        return '强'
+      } else {
+        return '非常强'
+      }
+    },
     // 获取数据
     getData () {
       this.isLoading = true
@@ -223,7 +237,7 @@ export default {
     },
     // 获取单个数据描述
     getLocationString (location, daily) {
-      return `${location.paths.join('')}在${this.$dayjs(daily.fxDate).calendar(null, DayjsCalendarConfigCopy)}的天气情况为：白天${daily.textDay}${daily.textDay.length === 1 ? '天' : ''}，夜间${daily.textNight}${daily.textNight.length === 1 ? '天' : ''}，最低气温${daily.tempMin}°C，最高气温${daily.tempMax}°C，${daily.windDirDay}${daily.windScaleDay}级，风速${daily.windSpeedDay}km/h，降水量${daily.precip}mm，相对湿度${daily.humidity}%，紫外线强度指数${daily.uvIndex}，气压${daily.pressure}hPa，可见度${daily.vis}km，日出${daily.sunrise}，日落${daily.sunset}。`
+      return `${location.paths.join('')}在${this.$dayjs(daily.fxDate).calendar(null, DayjsCalendarConfigCopy)}的天气情况为：白天${daily.textDay}${daily.textDay.length === 1 ? '天' : ''}，夜间${daily.textNight}${daily.textNight.length === 1 ? '天' : ''}，最低气温${daily.tempMin}°C，最高气温${daily.tempMax}°C，${daily.windDirDay}${daily.windScaleDay}级，风速${daily.windSpeedDay}km/h，降水量${daily.precip}mm，相对湿度${daily.humidity}%，紫外线指数${daily.uvIndex}算${this.getUvIndex(daily.uvIndex)}，气压${daily.pressure}hPa，可见度${daily.vis}km，日出${daily.sunrise}，日落${daily.sunset}。`
     }
   }
 }
