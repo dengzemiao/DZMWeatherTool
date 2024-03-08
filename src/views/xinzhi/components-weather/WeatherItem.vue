@@ -4,7 +4,7 @@
     <div class="weather-item-header">
       <!-- 地区名称 -->
       <span class="header-title">{{ location.pathName }}</span>
-      <span v-if="location.last_update">【 最后更新时间：{{ location.last_update }} 】</span>
+      <span v-if="location.last_update">【 天气更新时间：{{ location.last_update }} 】</span>
       <!-- 弹簧 -->
       <div style="flex: 1;"></div>
       <!-- 拷贝 -->
