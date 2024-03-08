@@ -5,7 +5,7 @@ import { BaseLayout, RouterView } from '@/layouts'
 export const routes = [
   {
     path: '/',
-    redirect: '/xinzhi',
+    redirect: '/home',
     component: BaseLayout,
     meta: { title: 'Layout', keepAlive: false },
     children: [
