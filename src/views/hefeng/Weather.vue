@@ -5,13 +5,13 @@
       <!-- 弹簧 -->
       <div style="flex: 1;"></div>
       <!-- 失败接口重新请求 -->
-      <a-button class="tool-button" @click="touchRetrieve">
+      <!-- <a-button class="tool-button" @click="touchRetrieve">
         失败地区重新获取
         <a-tooltip>
           <template #title>不清空列表，查询成功的地区会保留，会将查询失败的地区进行重新获取，以保证查询列表数据全部展示。</template>
           <InfoCircleOutlined />
         </a-tooltip>
-      </a-button>
+      </a-button> -->
       <!-- 条件查询 -->
       <a-button class="tool-button" @click="touchSearchConfig">
         查询
