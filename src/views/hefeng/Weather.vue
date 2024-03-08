@@ -77,7 +77,7 @@ export default {
   },
   mounted () {
     // 读取
-    this.reqkey = this.$pub.CUSTOM('zhixin-reqkey') || ''
+    this.reqkey = this.$pub.CUSTOM('hefeng-reqkey') || ''
     // 如果没有配置 key 禁止操作
     this.isLoading = !this.reqkey.length
     // 提示
@@ -85,7 +85,7 @@ export default {
       if (this.isLoading) {
         Modal.error({
           title: '提示',
-          content: '请到《心知天气》首页，配置好请求 key，否则将无法使用！',
+          content: '请到《和风天气》首页，配置好请求 key，否则将无法使用！',
         })
       }
     }, 100)

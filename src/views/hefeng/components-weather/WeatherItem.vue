@@ -29,33 +29,71 @@
         >
           <div>
             <span class="col-title">日期：</span>
-            <span class="col-desc col-desc-date">{{ $dayjs(item.date).calendar(null, DayjsCalendarConfig) }}</span>
+            <span class="col-desc col-desc-date">{{ $dayjs(item.fxDate).calendar(null, DayjsCalendarConfig) }}</span>
           </div>
           <div>
             <span class="col-title">白天：</span>
-            <span class="col-desc">{{ item.text_day }}</span>
-            <span class="col-title">　夜间：</span>
-            <span class="col-desc">{{ item.text_night }}</span>
+            <span class="col-desc">{{ item.textDay }}</span>
           </div>
           <div>
-            <span class="col-title">气温：</span>
-            <span class="col-desc col-desc-temp">{{ item.low }} ~ {{ item.high }}°C</span>
+            <span class="col-title">夜间：</span>
+            <span class="col-desc">{{ item.textNight }}</span>
+          </div>
+          <div>
+            <span class="col-title"> 气温：</span>
+            <span class="col-desc col-desc-temp">{{ item.tempMin }} ~ {{ item.tempMax }}°C　</span>
           </div>
           <div>
             <span class="col-title">风向：</span>
-            <span class="col-desc">{{ item.wind_direction }}风 {{ item.wind_scale }} 级</span>
+            <span class="col-desc">{{ item.windDirDay }} {{ item.windScaleDay }} 级</span>
           </div>
           <div>
             <span class="col-title">风速：</span>
-            <span class="col-desc">{{ item.wind_speed }}km/h</span>
+            <span class="col-desc">{{ item.windSpeedDay }}km/h</span>
           </div>
           <div>
             <span class="col-title">降水量：</span>
-            <span class="col-desc">{{ item.rainfall }}mm</span>
+            <span class="col-desc">{{ item.precip }}mm</span>
           </div>
           <div>
             <span class="col-title">相对湿度：</span>
             <span class="col-desc">{{ item.humidity }}%</span>
+          </div>
+          <div>
+            <span class="col-title">紫外线：</span>
+            <span class="col-desc">{{ item.uvIndex }}</span>
+          </div>
+          <div>
+            <span class="col-title">大气压强：</span>
+            <span class="col-desc">{{ item.pressure }}hPa</span>
+          </div>
+          <div>
+            <span class="col-title">可见度：</span>
+            <span class="col-desc">{{ item.vis }}km</span>
+          </div>
+          <div>
+            <span class="col-title">云量：</span>
+            <span class="col-desc">{{ item.cloud || 0 }}%</span>
+          </div>
+          <div>
+            <span class="col-title">日出：</span>
+            <span class="col-desc">{{ item.sunrise || '无' }}</span>
+          </div>
+          <div>
+            <span class="col-title">日落：</span>
+            <span class="col-desc">{{ item.sunset || '无' }}</span>
+          </div>
+          <div>
+            <span class="col-title">月升：</span>
+            <span class="col-desc">{{ item.moonrise || '无' }}</span>
+          </div>
+          <div>
+            <span class="col-title">月落：</span>
+            <span class="col-desc">{{ item.moonset || '无' }}</span>
+          </div>
+          <div>
+            <span class="col-title">月相：</span>
+            <span class="col-desc">{{ item.moonPhase || '无' }}</span>
           </div>
         </div>
       </div>
@@ -72,7 +110,7 @@
 
 <script>
 import Loading from '@/components/Loading'
-import { getWeather } from '@/api/xinzhi'
+import { getWeather } from '@/api/hefeng'
 import { DayjsCalendarConfig, DayjsCalendarConfigCopy } from '@/utils/constant'
 export default {
   props: {
@@ -136,27 +174,30 @@ export default {
         // 查询位置
         location: this.location.id,
         // 语言
-        language: 'zh-Hans',
-        // 单位 c:摄氏度 f:华氏度
-        unit: 'c',
-        // 起始时间
-        start: this.start,
+        language: 'zh-hans',
+        // 单位 m:公制单位 i:英制单位
+        unit: 'm',
         // 查询天数
         days: this.days
       }
       getWeather(params).then(res => {
-        const result = res.results[0]
-        this.location.error = ''
-        this.location.dailys = result.daily
-        this.location.last_update = result.last_update && this.$dayjs(result.last_update).format('YYYY-MM-DD HH:mm:ss')
-        this.colspan = (24 / this.location.dailys.length / 10).toFixed(2)
+        const { code, updateTime, daily } = res
+        if (code == 200) {
+          this.location.error = ''
+          this.location.dailys = daily
+          this.location.last_update = updateTime && this.$dayjs(updateTime).format('YYYY-MM-DD HH:mm:ss')
+          this.colspan = (24 / this.location.dailys.length / 10).toFixed(2)
+        } else {
+          this.location.dailys = []
+          this.location.last_update = ''
+          this.location.error = `查询失败，错误码：${code}`
+        }
         this.isLoading = false
       }).catch(err => {
         this.isLoading = false
         this.location.dailys = []
         this.location.last_update = ''
-        const data = err.response && err.response.data || {}
-        this.location.error = data.status ? `${data.status}，错误码:【${data.status_code}】` : err.message
+        this.location.error = err.message
       })
     },
     // 拷贝天气内容
@@ -182,7 +223,7 @@ export default {
     },
     // 获取单个数据描述
     getLocationString (location, daily) {
-      return `${location.paths.join('')}在${this.$dayjs(daily.date).calendar(null, DayjsCalendarConfigCopy)}的天气情况为：白天${daily.text_day}${daily.text_day.length === 1 ? '天' : ''}，夜间${daily.text_night}${daily.text_day.length === 1 ? '天' : ''}，最低气温${daily.low}°C，最高气温${daily.high}°C，${daily.wind_direction}风${daily.wind_scale}级，风速${daily.wind_speed}km/h，降水量${daily.rainfall}mm，相对湿度${daily.humidity}%。`
+      return `${location.paths.join('')}在${this.$dayjs(daily.fxDate).calendar(null, DayjsCalendarConfigCopy)}的天气情况为：白天${daily.textDay}${daily.textDay.length === 1 ? '天' : ''}，夜间${daily.textNight}${daily.textNight.length === 1 ? '天' : ''}，最低气温${daily.tempMin}°C，最高气温${daily.tempMax}°C，${daily.windDirDay}${daily.windScaleDay}级，风速${daily.windSpeedDay}km/h，降水量${daily.precip}mm，相对湿度${daily.humidity}%，紫外线强度指数${daily.uvIndex}，气压${daily.pressure}hPa，可见度${daily.vis}km，日出${daily.sunrise}，日落${daily.sunset}。`
     }
   }
 }
@@ -224,11 +265,6 @@ export default {
         cursor: pointer;
         border-right: 1px solid #d9d9d9;
         padding: 10px;
-        .col-button {
-          position: absolute;
-          top: 8px;
-          right: 8px;
-        }
         .col-title {
           color: #000;
         }

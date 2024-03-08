@@ -4,6 +4,22 @@ module.exports = {
     port: 8080,
     // 配置不同的后台 API 地址
     proxy: {
+      '/hfapi1': {
+        target: 'https://devapi.qweather.com',
+        ws: false,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/hfapi1': ''
+        }
+      },
+      '/hfapi2': {
+        target: 'https://geoapi.qweather.com',
+        ws: false,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/hfapi2': ''
+        }
+      },
       '/xzapi': {
         target: 'https://api.seniverse.com',
         ws: false,

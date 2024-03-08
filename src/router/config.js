@@ -16,6 +16,26 @@ export const routes = [
         meta: { title: '首页', keepAlive: false, icon: 'menu_0_nomal.png', sicon: 'menu_0_select.png', type: 2 }
       },
       {
+        path: '/hefeng',
+        redirect: '/hefeng/home',
+        name: 'hefeng',
+        meta: { title: '和风天气', keepAlive: false, icon: 'menu_0_nomal.png', type: 2 },
+        children: [
+          {
+            path: '/hefeng/home',
+            name: 'HefengHome',
+            component: () => import('@/views/hefeng/Home'),
+            meta: { title: '首页', keepAlive: false, icon: 'menu_0_nomal.png', sicon: 'menu_0_select.png', type: 2 },
+          },
+          {
+            path: '/hefeng/weather',
+            name: 'HefengWeather',
+            component: () => import('@/views/hefeng/Weather'),
+            meta: { title: '查询天气', keepAlive: false, icon: 'menu_0_nomal.png', sicon: 'menu_0_select.png', type: 2 }
+          }
+        ]
+      },
+      {
         path: '/xinzhi',
         redirect: '/xinzhi/home',
         name: 'Xinzhi',
@@ -32,20 +52,6 @@ export const routes = [
             name: 'XinzhiWeather',
             component: () => import('@/views/xinzhi/Weather'),
             meta: { title: '查询天气', keepAlive: false, icon: 'menu_0_nomal.png', sicon: 'menu_0_select.png', type: 2 }
-          }
-        ]
-      },
-      {
-        path: '/juhe',
-        redirect: '/juhe/home',
-        name: 'Juhe',
-        meta: { title: '聚合数据', keepAlive: false, icon: 'menu_0_nomal.png', type: 2 },
-        children: [
-          {
-            path: '/juhe/home',
-            name: 'JuheHome',
-            component: () => import('@/views/juhe/Home'),
-            meta: { title: '首页', keepAlive: false, icon: 'menu_0_nomal.png', sicon: 'menu_0_select.png', type: 2 },
           }
         ]
       }

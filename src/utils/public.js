@@ -4,9 +4,6 @@ const Pub = {
 
   // ================================= 《 公 共 参 数 》
 
-  // 知心天气 - 地区格式
-  xzlocationUrl: 'https://seniverse.yuque.com/hyper_data/api_v3/bwi8100zvwl0koau#ElVVu',
-
   // ================================= 《 路 由 跳 转 》
 
   // 新窗口访问链接

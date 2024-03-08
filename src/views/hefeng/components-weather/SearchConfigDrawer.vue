@@ -14,42 +14,24 @@
         :label-col="{ span: 5 }"
         :wrapper-col="{ span: 20 }"
       >
-        <!-- 起始时间 -->
+        <!-- 查询天数 -->
         <a-form-item 
-          label="起始时间"
-          name="start"
+          label="查询天数"
+          name="days"
           :rules="[{ required: true }]"
         >
           <a-select
-            v-model:value="formState.start"
+            v-model:value="formState.days"
             placeholder="请选择"
             :getPopupContainer="(triggerNode) => triggerNode.parentNode"
           >
-            <a-select-option :value="-2">前天</a-select-option>
-            <a-select-option :value="-1">昨天</a-select-option>
-            <a-select-option :value="0">今天</a-select-option>
-            <a-select-option :value="1">明天</a-select-option>
+            <a-select-option :value="3">3天</a-select-option>
+            <a-select-option :value="7">7天</a-select-option>
+            <a-select-option :value="10" disabled>10天</a-select-option>
+            <a-select-option :value="15" disabled>15天</a-select-option>
+            <a-select-option :value="30" disabled>30天</a-select-option>
             <!-- <a-select-option :value="2">自定义日期</a-select-option> -->
           </a-select>
-        </a-form-item>
-        <!-- 查询天数 -->
-        <a-form-item 
-          name="days"
-          :rules="[{ required: true, validator: validatorDays }]"
-        >
-          <!-- label + 说明 -->
-          <template #label>
-            <span>查询天数</span>
-            <a-tooltip>
-              <template #title>获取指定城市未来最多 15 天每天的白天和夜间预报，以及昨日的历史天气。付费用户可获取全部数据，<strong style="color: red;">免费用户只返回 3 天天气预报（今天、明天、后天，其他的日期都无法获取到）</strong>。降水预报目前只支持国内城市。</template>
-              <InfoCircleOutlined style="margin-left: 2px;" />
-            </a-tooltip>
-          </template>
-          <!-- 输入框 -->
-          <a-input
-            v-model:value="formState.days"
-            placeholder="请输入"
-          />
         </a-form-item>
         <!-- 查询地区 -->
         <a-form-item 
@@ -63,11 +45,11 @@
               <template #title>
                 单个地区搜索格式支持多种，可以参考文档：
                 <a 
-                  href="https://seniverse.yuque.com/hyper_data/api_v3/bwi8100zvwl0koau#ElVVu"
+                  href="https://dev.qweather.com/docs/api/geoapi/city-lookup/"
                   target="_blank"
                 >
                   地区格式文档
-                </a>。<strong style="color: red;">注意：</strong>一般县级及以上的地区都能查到天气，区级得看城市，从下面搜索的出来的地区就是可以获取到天气信息的，搜不到就不支持，可以点击查询结果将需要的地区追加到上面的查询框中。<strong style="color: red;">输入省份查询会获取到所有的市、区级，输入市级查询会获取到所有的县级，输入太精确没搜到，可以减少内容，会模糊搜索，然后在结果中选（例如：“朝阳区”就搜不到，得搜“朝阳”会模糊搜索的到，因为这个地区名有跟别的地方重名），</strong>这些输出的子地区都是可以获取到天气的。
+                </a>。<strong style="color: red;">注意：</strong>一般县级及以上的地区都能查到天气，区级得看城市，从下面搜索的出来的地区就是可以获取到天气信息的，搜不到就不支持，可以点击查询结果将需要的地区追加到上面的查询框中。<strong style="color: red;">输入省份查询会获取到所有的市、区级，输入市级查询会获取到所有的县级，输入太精确没搜到，可以减少内容，会模糊搜索，然后在结果中选，</strong>这些输出的子地区都是可以获取到天气的。
               </template>
               <InfoCircleOutlined style="margin-left: 2px;" />
             </a-tooltip>
@@ -128,7 +110,7 @@
 </template>
 
 <script>
-import { getLocation } from '@/api/xinzhi'
+import { getLocation } from '@/api/hefeng'
 import Loading from '@/components/Loading'
 export default {
   props: {
@@ -155,10 +137,8 @@ export default {
       selectLocationIDs: [],
       // 表单数据
       formState: {
-        // 起始时间
-        start: 0,
         // 查询天数
-        days: 3,
+        days: 7,
         // 查询地区
         locations: []
       }
@@ -194,17 +174,6 @@ export default {
         this.$refs.RefForm.validate()
       }
     },
-    // 校验查询天数
-    validatorDays (rule, value) {
-      if (!value) {
-        return Promise.reject('请输入')
-      } else if (!this.$pub.REG_IS_INTEGER_POSITIVE(value)) {
-        return Promise.reject('必须为正整数')
-      } else if (value > 7) {
-        return Promise.reject('最多查询 7 天')
-      }
-      return Promise.resolve()
-    },
     // 辅助查询
     onSearch (e) {
       if (!e) {
@@ -214,23 +183,27 @@ export default {
       this.isLoading = true
       const params = {
         key: this.reqkey,
-        q: e
+        location: e
       }
       getLocation(params).then(res => {
-        const locations = res.results
-        locations.forEach(item => {
-          const paths = Array.from(new Set(item.path.split(','))).reverse()
-          item.pathName = paths.join('-')
-          item.paths = paths
-        })
-        this.$refs['location-search-list'].scrollTop = 0
-        this.locations = locations
+        const { code, location } = res
+        if (code == 200) {
+          location.forEach(item => {
+            const paths = Array.from(new Set([item.country, item.adm1, item.adm2, item.name]))
+            item.pathName = paths.join('-')
+            item.paths = paths
+          })
+          this.$refs['location-search-list'].scrollTop = 0
+          this.locations = location
+        } else {
+          this.locations = []
+          this.$message.error(`查询失败，错误码：${code}`)
+        }
         this.isLoading = false
       }).catch(err => {
         this.isLoading = false
         this.locations = []
-        const data = err.response && err.response.data || {}
-        this.$message.error(data.status ? `${data.status}，错误码:【${data.status_code}】` : err.message)
+        this.$message.error(err.message)
       })
     },
     // 查询

@@ -1,15 +1,3 @@
-// 心知天气状态码
-export const XINZHI_WEATHER_CODE = {
-  // 天气状态码（code）
-  // 0: 晴
-  // 1: 
-  // 2: 
-  // 3: 
-  // 4: 多云
-  // 13: 小雨
-  // 14: 中雨
-}
-
 // 日期配置
 export const DayjsCalendarConfig = {
   sameDay: '今天 MM-DD dddd',
