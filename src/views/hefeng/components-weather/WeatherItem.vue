@@ -56,12 +56,12 @@
             <span class="col-desc">{{ item.precip }}mm</span>
           </div>
           <div>
-            <span class="col-title">相对湿度：</span>
-            <span class="col-desc">{{ item.humidity }}%</span>
+            <span class="col-title">湿度：</span>
+            <span class="col-desc">{{ item.humidity }}% {{ getHumidity(item.humidity) }}</span>
           </div>
           <div>
             <span class="col-title">紫外线：</span>
-            <span class="col-desc">{{ item.uvIndex }}　{{ getUvIndex(item.uvIndex) }}</span>
+            <span class="col-desc">{{ item.uvIndex }} {{ getUvIndex(item.uvIndex) }}</span>
           </div>
           <div>
             <span class="col-title">大气压强：</span>
@@ -177,7 +177,7 @@ export default {
         this.getData()
       }
     },
-    // 获取紫外线强度
+    // 获取紫外线强度等级
     getUvIndex (uvIndex) {
       if (uvIndex <= 2) {
         return '非常弱'
@@ -189,6 +189,29 @@ export default {
         return '强'
       } else {
         return '非常强'
+      }
+    },
+    // 获取相对湿度等级
+    getHumidity (humidity) {
+      if (humidity <= 10) {
+        return '特别干燥'
+      } else if (humidity <= 20) {
+        return '较干燥'
+      } else if (humidity <= 30) {
+        return '干燥'
+      } else if (humidity <= 40) {
+        return '舒适干燥'
+      } else if (humidity <= 50) {
+        return '轻微潮湿'
+      } else if (humidity <= 60) {
+        return '偏潮'
+      } else if (humidity <= 70) {
+        return '潮湿'
+      } else if (humidity <= 80) {
+        return '较湿润'
+      } else {
+        // humidity > 80
+        return '特别湿润'
       }
     },
     // 获取数据
@@ -284,7 +307,7 @@ export default {
     },
     // 获取单个数据描述
     getLocationString (location, daily) {
-      return `${location.paths.join('')}在${this.$dayjs(daily.fxDate).calendar(null, DayjsCalendarConfigCopy)}的天气情况为：白天${daily.textDay}${daily.textDay.length === 1 ? '天' : ''}，夜间${daily.textNight}${daily.textNight.length === 1 ? '天' : ''}，最低气温${daily.tempMin}°C，最高气温${daily.tempMax}°C，${daily.windDirDay}${daily.windScaleDay}级，风速${daily.windSpeedDay}km/h，降水量${daily.precip}mm，相对湿度${daily.humidity}%，紫外线指数${daily.uvIndex}算${this.getUvIndex(daily.uvIndex)}，气压${daily.pressure}hPa，可见度${daily.vis}km，云量${daily.cloud || 0}%，日出${daily.sunrise}，日落${daily.sunset}。`
+      return `${location.paths.join('')}在${this.$dayjs(daily.fxDate).calendar(null, DayjsCalendarConfigCopy)}的天气情况为：白天${daily.textDay}${daily.textDay.length === 1 ? '天' : ''}，夜间${daily.textNight}${daily.textNight.length === 1 ? '天' : ''}，最低气温${daily.tempMin}°C，最高气温${daily.tempMax}°C，${daily.windDirDay}${daily.windScaleDay}级，风速${daily.windSpeedDay}km/h，降水量${daily.precip}mm，相对湿度${daily.humidity}%算${this.getHumidity(daily.humidity)}，紫外线指数${daily.uvIndex}算${this.getUvIndex(daily.uvIndex)}，气压${daily.pressure}hPa，可见度${daily.vis}km，云量${daily.cloud || 0}%，日出${daily.sunrise}，日落${daily.sunset}。`
     }
   }
 }
