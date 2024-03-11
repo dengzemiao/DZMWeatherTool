@@ -24,7 +24,6 @@
           v-for="(item, index) in location.dailys"
           :class="`weather-item-col ${selectIndex === index ? 'active' : ''}`"
           :key="item.date"
-          :style="`flex: ${colspan};`"
           @click="touchCopy(item, index)"
         >
           <div>
@@ -40,7 +39,7 @@
             <span class="col-desc">{{ item.textNight }}</span>
           </div>
           <div>
-            <span class="col-title"> 气温：</span>
+            <span class="col-title">气温：</span>
             <span class="col-desc col-desc-temp">{{ item.tempMin }} ~ {{ item.tempMax }}°C　</span>
           </div>
           <div>
@@ -95,9 +94,9 @@
             <span class="col-title">月相：</span>
             <span class="col-desc">{{ item.moonPhase || '无' }}</span>
           </div>
-          <a-button class="col-button" size="small" @click.stop="touchCopy(item)">
+          <!-- <a-button class="col-button" size="small" @click.stop="touchCopy(item)">
             <copy-outlined />
-          </a-button>
+          </a-button> -->
         </div>
       </div>
       <!-- 无数据 | 失败 | 加载 -->
@@ -148,8 +147,6 @@ export default {
       DayjsCalendarConfigCopy,
       // 加载
       isLoading: false,
-      // 根据查询天数计算
-      colspan: 0,
       // 选中的天气
       selectIndex: undefined
     }
@@ -235,11 +232,12 @@ export default {
           this.location.error = ''
           this.location.dailys = daily
           this.location.last_update = updateTime && this.$dayjs(updateTime).format('YYYY-MM-DD HH:mm:ss')
-          this.colspan = (24 / this.location.dailys.length / 10).toFixed(2)
+          this.$emit('success', this.location)
         } else {
           this.location.dailys = []
           this.location.last_update = ''
           this.location.error = `查询失败，错误码：${code}`
+          this.$emit('error', this.location)
         }
         this.isLoading = false
       }).catch(err => {
@@ -247,6 +245,7 @@ export default {
         this.location.dailys = []
         this.location.last_update = ''
         this.location.error = err.message
+        this.$emit('error', this.location)
       })
     },
     // 获取逐小时天气
@@ -270,7 +269,6 @@ export default {
           // this.location.error = ''
           // this.location.dailys = daily
           // this.location.last_update = updateTime && this.$dayjs(updateTime).format('YYYY-MM-DD HH:mm:ss')
-          // this.colspan = (24 / this.location.dailys.length / 10).toFixed(2)
         } else {
           // this.location.dailys = []
           // this.location.last_update = ''
@@ -343,13 +341,15 @@ export default {
       height: 100%;
       min-height: 100px;
       border: 1px solid #d9d9d9;
-      border-right: none;
       .weather-item-col.active {
         background-color: #E9F6FE !important;
       }
       .weather-item-col {
+        width: 14.28%;
+        flex-shrink: 0;
         position: relative;
         cursor: pointer;
+        border-bottom: 1px solid #d9d9d9;
         border-right: 1px solid #d9d9d9;
         padding: 10px;
         .col-button {
