@@ -21,11 +21,11 @@
       <!-- 天气数据 -->
       <div class="weather-item-row" v-if="location.dailys && location.dailys.length">
         <div
-          class="weather-item-col"
-          v-for="item in location.dailys"
+          v-for="(item, index) in location.dailys"
+          :class="`weather-item-col ${selectIndex === index ? 'active' : ''}`"
           :key="item.date"
           :style="`flex: ${colspan};`"
-          @click="touchCopy(item)"
+          @click="touchCopy(item, index)"
         >
           <div>
             <span class="col-title">日期：</span>
@@ -95,6 +95,9 @@
             <span class="col-title">月相：</span>
             <span class="col-desc">{{ item.moonPhase || '无' }}</span>
           </div>
+          <a-button class="col-button" size="small" @click.stop="touchCopy(item)">
+            <copy-outlined />
+          </a-button>
         </div>
       </div>
       <!-- 无数据 | 失败 | 加载 -->
@@ -110,7 +113,7 @@
 
 <script>
 import Loading from '@/components/Loading'
-import { getWeather } from '@/api/hefeng'
+import { getWeather, getWeatherHours } from '@/api/hefeng'
 import { DayjsCalendarConfig, DayjsCalendarConfigCopy } from '@/utils/constant'
 export default {
   props: {
@@ -146,7 +149,9 @@ export default {
       // 加载
       isLoading: false,
       // 根据查询天数计算
-      colspan: 0
+      colspan: 0,
+      // 选中的天气
+      selectIndex: undefined
     }
   },
   mounted () {
@@ -158,6 +163,13 @@ export default {
       if (!this.isLoading) {
         this.getData()
       }
+    },
+    // 选中某一天数据
+    touchSelect (item, index) {
+      // 设置选中
+      this.selectIndex = index
+      // 获取逐小时天气
+      this.getDataHours()
     },
     // 只有失败的会重新加载数据
     failedLoadData () {
@@ -212,6 +224,41 @@ export default {
         this.location.dailys = []
         this.location.last_update = ''
         this.location.error = err.message
+      })
+    },
+    // 获取逐小时天气
+    getDataHours () {
+      this.isLoading = true
+      const params = {
+        // 私钥
+        key: this.reqkey,
+        // 查询位置
+        location: this.location.id,
+        // 语言
+        language: 'zh-hans',
+        // 单位 m:公制单位 i:英制单位
+        unit: 'm',
+        // 查询时间
+        hours: 24
+      }
+      getWeatherHours(params).then(res => {
+        const { code, updateTime, daily } = res
+        if (code == 200) {
+          // this.location.error = ''
+          // this.location.dailys = daily
+          // this.location.last_update = updateTime && this.$dayjs(updateTime).format('YYYY-MM-DD HH:mm:ss')
+          // this.colspan = (24 / this.location.dailys.length / 10).toFixed(2)
+        } else {
+          // this.location.dailys = []
+          // this.location.last_update = ''
+          // this.location.error = `查询失败，错误码：${code}`
+        }
+        this.isLoading = false
+      }).catch(err => {
+        this.isLoading = false
+        // this.location.dailys = []
+        // this.location.last_update = ''
+        // this.location.error = err.message
       })
     },
     // 拷贝天气内容
@@ -274,11 +321,21 @@ export default {
       min-height: 100px;
       border: 1px solid #d9d9d9;
       border-right: none;
+      .weather-item-col.active {
+        background-color: #E9F6FE !important;
+      }
       .weather-item-col {
         position: relative;
         cursor: pointer;
         border-right: 1px solid #d9d9d9;
         padding: 10px;
+        .col-button {
+          position: absolute;
+          top: 4px;
+          right: 4px;
+          transform: scale(0.8);
+          opacity: 0.6;
+        }
         .col-title {
           color: #000;
         }

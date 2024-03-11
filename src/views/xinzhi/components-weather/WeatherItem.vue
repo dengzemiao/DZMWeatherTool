@@ -57,6 +57,9 @@
             <span class="col-title">相对湿度：</span>
             <span class="col-desc">{{ item.humidity }}%</span>
           </div>
+          <a-button class="col-button" size="small" @click.stop="touchCopy(item)">
+            <copy-outlined />
+          </a-button>
         </div>
       </div>
       <!-- 无数据 | 失败 | 加载 -->
@@ -226,8 +229,10 @@ export default {
         padding: 10px;
         .col-button {
           position: absolute;
-          top: 8px;
-          right: 8px;
+          top: 4px;
+          right: 4px;
+          transform: scale(0.8);
+          opacity: 0.6;
         }
         .col-title {
           color: #000;
