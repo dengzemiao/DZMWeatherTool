@@ -15,6 +15,7 @@
         class="weather-item-col"
         v-for="item in locations"
         :key="item.date"
+        :style="`background-color: ${item.tag && $pub.tagColor[item.tag] || ''};`"
         @click="touchCopy(item)"
       >
         <div>

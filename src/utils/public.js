@@ -4,6 +4,19 @@ const Pub = {
 
   // ================================= 《 公 共 参 数 》
 
+  // 标记颜色
+  tagColor: {},
+
+  // 随机颜色
+  GET_RANDOM_COLOR() {
+    var color = 'rgba('
+    for (var i = 0; i < 3; i++) {
+      color += Math.floor(Math.random() * 256) + ', '
+    }
+    color = color.slice(0, -2) + ', 0.4)'
+    return color
+  },
+
   // ================================= 《 路 由 跳 转 》
 
   // 新窗口访问链接

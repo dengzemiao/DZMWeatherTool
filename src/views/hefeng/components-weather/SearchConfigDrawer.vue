@@ -246,14 +246,19 @@ export default {
           const strs = this.$pub.STRING_SPACE_ALL(content || '').split('、')
           strs.forEach((str, index) => {
             if (str) {
-              const [pathName, id] = str.split('>')
+              const [pathName, id, tag] = str.split('>')
               const paths = pathName.split('-')
               selectLocationIDs.push(id)
               locations.push({
                 id: id || index,
+                tag,
                 paths,
                 pathName
               })
+              if (tag && !this.$pub.tagColor[tag]) {
+                console.log(this.$pub.GET_RANDOM_COLOR())
+                this.$pub.tagColor[tag] = this.$pub.GET_RANDOM_COLOR()
+              }
             }
           })
           this.selectLocationIDs = selectLocationIDs
