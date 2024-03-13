@@ -54,13 +54,23 @@
               <InfoCircleOutlined style="margin-left: 2px;" />
             </a-tooltip>
           </template>
+          <!-- 地区工具栏 -->
+          <div class="locations-tool">
+            <!-- 贴贴 -->
+            <a-button size="small" type="primary" @click="touchPastingLocations">贴贴</a-button>
+            <!-- 拷贝 -->
+            <a-button size="small" type="primary" @click="touchCopyLocations">拷贝</a-button>
+            <!-- 清空 -->
+            <a-button size="small" type="primary" @click="touchClearLocations">清空</a-button>
+          </div>
           <!-- 地区列表 -->
           <div class="locations-view" v-if="formState.locations.length">
+            <!-- 地区 -->
             <a-tag
               closable
               v-for="item in formState.locations"
               :key="item.id"
-              @close="touchRemove(item)"
+              @close.stop="touchRemove(item)"
             >
               {{ item.pathName }}
             </a-tag>
@@ -71,7 +81,6 @@
             <a-input-search
               v-model:value="auxLocation"
               placeholder="搜索地区，支持模糊搜索"
-              enter-button="搜索地区名称"
               :disabled="isLoading"
               @search="onSearch"
             />
@@ -212,19 +221,79 @@ export default {
         this.$emit('search', {...res, locations: [...res.locations]})
         this.onClose()
       })
+    },
+    // 拷贝选中地区
+    touchCopyLocations () {
+      const locations = []
+      this.formState.locations.forEach(item => {
+        locations.push(`${item.pathName}>${item.id}`)
+      })
+      try {
+        // 拷贝
+        this.$copy(locations.join('、'))
+        this.$message.success('拷贝成功')
+      } catch (error) {
+        this.$message.error('拷贝失败')
+      }
+    },
+    // 贴贴选中地区
+    touchPastingLocations () {
+      try {
+        const clipboardContent = navigator.clipboard.readText()
+        clipboardContent.then(content => {
+          const locations = []
+          const selectLocationIDs = []
+          const strs = this.$pub.STRING_SPACE_ALL(content || '').split('、')
+          strs.forEach((str, index) => {
+            if (str) {
+              const [pathName, id] = str.split('>')
+              const paths = pathName.split('-')
+              selectLocationIDs.push(id)
+              locations.push({
+                id: id || index,
+                paths,
+                pathName
+              })
+            }
+          })
+          this.selectLocationIDs = selectLocationIDs
+          this.formState.locations = locations
+        }).catch(err => {
+          this.$message.error(err.message)
+        })
+      } catch (err) {
+        this.$message.error(err.message)
+      }
+    },
+    // 清空选中地区
+    touchClearLocations () {
+      this.formState.locations = []
+      this.selectLocationIDs = []
     }
   }
 }
 </script>
-
+<style>
+.location-search {
+  .ant-input {
+    height: 32px;
+  }
+}
+</style>
 <style lang="less" scoped>
+.locations-tool {
+  margin-top: 6px;
+  .ant-btn {
+    margin-right: 10px;
+  }
+}
 .locations-view {
-  margin-bottom: 10px;
   .ant-tag {
-    margin-top: 6px;
+    margin-top: 10px;
   }
 }
 .location-search {
+  margin-top: 10px;
   .location-search-tip {
     margin-bottom: 10px;
   }
