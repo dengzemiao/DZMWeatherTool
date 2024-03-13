@@ -32,15 +32,23 @@
           </div>
           <div>
             <span class="col-title">白天：</span>
-            <span class="col-desc">{{ item.textDay }}</span>
+            <span class="col-desc col-desc-temp">{{ item.textDay }}</span>
           </div>
           <div>
             <span class="col-title">夜间：</span>
-            <span class="col-desc">{{ item.textNight }}</span>
+            <span class="col-desc col-desc-temp">{{ item.textNight }}</span>
           </div>
           <div>
             <span class="col-title">气温：</span>
             <span class="col-desc col-desc-temp">{{ item.tempMin }} ~ {{ item.tempMax }}°C　</span>
+          </div>
+          <div>
+            <span class="col-title">湿度：</span>
+            <span class="col-desc col-desc-temp">{{ item.humidity }}% {{ getHumidity(item.humidity) }}</span>
+          </div>
+          <div>
+            <span class="col-title">紫外线：</span>
+            <span class="col-desc col-desc-temp">{{ item.uvIndex }} {{ getUvIndex(item.uvIndex) }}</span>
           </div>
           <div>
             <span class="col-title">风向：</span>
@@ -53,14 +61,6 @@
           <div>
             <span class="col-title">降水量：</span>
             <span class="col-desc">{{ item.precip }}mm</span>
-          </div>
-          <div>
-            <span class="col-title">湿度：</span>
-            <span class="col-desc">{{ item.humidity }}% {{ getHumidity(item.humidity) }}</span>
-          </div>
-          <div>
-            <span class="col-title">紫外线：</span>
-            <span class="col-desc">{{ item.uvIndex }} {{ getUvIndex(item.uvIndex) }}</span>
           </div>
           <div>
             <span class="col-title">大气压强：</span>
@@ -369,7 +369,7 @@ export default {
           color: red;
         }
         .col-desc-date {
-          color: blue;
+          color: green;
         }
       }
       .weather-item-col:hover {

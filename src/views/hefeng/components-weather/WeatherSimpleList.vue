@@ -28,27 +28,27 @@
         </div>
         <div>
           <span class="col-title">白天：</span>
-          <span class="col-desc">{{ item.textDay }}</span>
+          <span class="col-desc col-desc-temp">{{ item.textDay }}</span>
         </div>
         <div>
           <span class="col-title">夜间：</span>
-          <span class="col-desc">{{ item.textNight }}</span>
+          <span class="col-desc col-desc-temp">{{ item.textNight }}</span>
         </div>
         <div>
           <span class="col-title">气温：</span>
           <span class="col-desc col-desc-temp">{{ item.tempMin }} ~ {{ item.tempMax }}°C　</span>
         </div>
         <div>
-          <span class="col-title">风向：</span>
-          <span class="col-desc">{{ item.windDirDay }} {{ item.windScaleDay }} 级</span>
-        </div>
-        <div>
           <span class="col-title">湿度：</span>
-          <span class="col-desc">{{ item.humidity }}% {{ getHumidity(item.humidity) }}</span>
+          <span class="col-desc col-desc-temp">{{ item.humidity }}% {{ getHumidity(item.humidity) }}</span>
         </div>
         <div>
           <span class="col-title">紫外线：</span>
-          <span class="col-desc">{{ item.uvIndex }} {{ getUvIndex(item.uvIndex) }}</span>
+          <span class="col-desc col-desc-temp">{{ item.uvIndex }} {{ getUvIndex(item.uvIndex) }}</span>
+        </div>
+        <div>
+          <span class="col-title">风向：</span>
+          <span class="col-desc">{{ item.windDirDay }} {{ item.windScaleDay }} 级</span>
         </div>
       </div>
     </div>
@@ -179,7 +179,10 @@ export default {
         color: red;
       }
       .col-desc-date {
-        color: blue;
+        color: green;
+      }
+      .col-desc-pathname {
+        color: green;
       }
     }
     .weather-item-col:hover {

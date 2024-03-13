@@ -19,7 +19,7 @@ export const routes = [
         path: '/hefeng',
         redirect: '/hefeng/home',
         name: 'hefeng',
-        meta: { title: '和风天气', keepAlive: false, icon: 'menu_0_nomal.png', type: 2 },
+        meta: { title: '和风天气（推荐）', keepAlive: false, icon: 'menu_0_nomal.png', type: 2 },
         children: [
           {
             path: '/hefeng/home',
