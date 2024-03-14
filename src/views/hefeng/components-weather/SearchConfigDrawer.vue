@@ -57,6 +57,8 @@
           <!-- 地区工具栏 -->
           <div class="locations-tool">
             <!-- 贴贴 -->
+            <a-input size="small" class="locations-tool-input" placeholder="贴 贴" @blur="onBlurLocations"></a-input>
+            <!-- 贴贴 -->
             <a-button size="small" type="primary" @click="touchPastingLocations">贴贴</a-button>
             <!-- 拷贝 -->
             <a-button size="small" type="primary" @click="touchCopyLocations">拷贝</a-button>
@@ -241,34 +243,42 @@ export default {
       try {
         const clipboardContent = navigator.clipboard.readText()
         clipboardContent.then(content => {
-          const locations = []
-          const selectLocationIDs = []
-          const strs = this.$pub.STRING_SPACE_ALL(content || '').split('、')
-          strs.forEach((str, index) => {
-            if (str) {
-              const [pathName, id, tag] = str.split('>')
-              const paths = pathName.split('-')
-              selectLocationIDs.push(id)
-              locations.push({
-                id: id || index,
-                tag,
-                paths,
-                pathName
-              })
-              if (tag && !this.$pub.tagColor[tag]) {
-                console.log(this.$pub.GET_RANDOM_COLOR())
-                this.$pub.tagColor[tag] = this.$pub.GET_RANDOM_COLOR()
-              }
-            }
-          })
-          this.selectLocationIDs = selectLocationIDs
-          this.formState.locations = locations
+          this.onLocationsAnalysisHandler(content)
         }).catch(err => {
           this.$message.error(err.message)
         })
       } catch (err) {
         this.$message.error(err.message)
       }
+    },
+    // 失焦处理内容
+    onBlurLocations (e) {
+      this.onLocationsAnalysisHandler(e.target.value)
+    },
+    // 地区解析处理
+    onLocationsAnalysisHandler (content) {
+      const locations = []
+      const selectLocationIDs = []
+      const strs = this.$pub.STRING_SPACE_ALL(content || '').split('、')
+      strs.forEach((str, index) => {
+        if (str) {
+          const [pathName, id, tag] = str.split('>')
+          const paths = pathName.split('-')
+          selectLocationIDs.push(id)
+          locations.push({
+            id: id || index,
+            tag,
+            paths,
+            pathName
+          })
+          if (tag && !this.$pub.tagColor[tag]) {
+            console.log(this.$pub.GET_RANDOM_COLOR())
+            this.$pub.tagColor[tag] = this.$pub.GET_RANDOM_COLOR()
+          }
+        }
+      })
+      this.selectLocationIDs = selectLocationIDs
+      this.formState.locations = locations
     },
     // 清空选中地区
     touchClearLocations () {
@@ -288,6 +298,16 @@ export default {
 <style lang="less" scoped>
 .locations-tool {
   margin-top: 6px;
+  .locations-tool-input {
+    width: 48px;
+    margin-right: 10px;
+    color: rgb(232, 230, 227);
+    border-color: rgb(0, 89, 171);
+    background-image: initial;
+    background-color: rgb(0, 98, 190);
+    text-shadow: rgba(0, 0, 0, 0.12) 0px -1px 0px;
+    box-shadow: rgba(0, 0, 0, 0.04) 0px 2px 0px;
+  }
   .ant-btn {
     margin-right: 10px;
   }
