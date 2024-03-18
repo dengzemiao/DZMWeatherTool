@@ -4,7 +4,9 @@
     <!-- 左侧菜单 -->
     <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
       <!-- logo -->
-      <div class="layout-logo" />
+      <div class="layout-logo">
+        <a href="/home" target="_blank"></a>
+      </div>
       <!-- 中间内容菜单 -->
       <Menu
         class="layout-menu"
@@ -79,7 +81,7 @@ export default {
   }
 }
 </script>
-<style>
+<style lang="less">
 #layout-main {
   min-height: 100%;
 }
@@ -106,6 +108,12 @@ export default {
   height: 32px;
   background: rgba(255, 255, 255, 0.2);
   margin: 16px;
+  cursor: pointer;
+  a {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+  }
 }
 #layout-main .layout-menu {
   width: 100%;
