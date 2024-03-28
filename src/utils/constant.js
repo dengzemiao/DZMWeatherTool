@@ -9,11 +9,21 @@ export const DayjsCalendarConfig = {
 }
 
 // 日期配置（复制内容使用）
+// export const DayjsCalendarConfigCopy = {
+//   sameDay: '今天YYYY年MM月DD日dddd',
+//   nextDay: '明天YYYY年MM月DD日dddd',
+//   nextWeek: 'YYYY年MM月DD日dddd',
+//   lastDay: '昨天YYYY年MM月DD日dddd',
+//   lastWeek: 'YYYY年MM月DD日dddd',
+//   sameElse: 'YYYY年MM月DD日dddd'
+// }
+
+// 日期配置（复制内容使用）
 export const DayjsCalendarConfigCopy = {
-  sameDay: '今天YYYY年MM月DD日dddd',
-  nextDay: '明天YYYY年MM月DD日dddd',
-  nextWeek: 'YYYY年MM月DD日dddd',
-  lastDay: '昨天YYYY年MM月DD日dddd',
-  lastWeek: 'YYYY年MM月DD日dddd',
-  sameElse: 'YYYY年MM月DD日dddd'
+  sameDay: '今天（MM月DD日）dddd',
+  nextDay: '明天（MM月DD日）dddd',
+  nextWeek: '（MM月DD日）dddd',
+  lastDay: '昨天（MM月DD日）dddd',
+  lastWeek: '（MM月DD日）dddd',
+  sameElse: '（MM月DD日）dddd'
 }
