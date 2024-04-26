@@ -1,7 +1,7 @@
 module.exports = {
   devServer: {
     // 端口号
-    port: 8080,
+    port: 8889,
     // 配置不同的后台 API 地址
     proxy: {
       '/hfapi1': {
