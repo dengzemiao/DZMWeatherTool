@@ -15,7 +15,7 @@ open http://wx.nmc.cn/f
 open http://www.weather.com.cn/forecast/
 
 # 天气工具（现地址）
-open http://10.0.51.147:8080/hefeng/weather
+# open http://10.0.51.147:8080/hefeng/weather
 
 # 天气工具（跑代码）
 cd .. # /Users/dengzemiao/Desktop/GitHub/DZMWeatherTool
