@@ -5,6 +5,9 @@ cpath=$(pwd)
 # 天气模版文件
 open "$cpath/天气模版.txt"
 
+# 头条地址
+open https://mp.toutiao.com/profile_v4/graphic/articles
+
 # 智普清言（AI）
 open https://chatglm.cn/main/detail
 
